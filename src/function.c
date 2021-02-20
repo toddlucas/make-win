@@ -1047,7 +1047,7 @@ func_filter_filterout (char *o, char **argv, const char *funcname)
               wp = hash_find_item (&a_word_table, &a_word_key);
               while (wp)
                 {
-                  wp->matched |= 1;
+                  wp->matched = 1;
                   wp = wp->chain;
                 }
             }
@@ -1061,7 +1061,7 @@ func_filter_filterout (char *o, char **argv, const char *funcname)
       for (wp = wordhead; wp != 0; wp = wp->next)
         if (is_filter ? wp->matched : !wp->matched)
           {
-            o = variable_buffer_output (o, wp->str, strlen (wp->str));
+            o = variable_buffer_output (o, wp->str, wp->length);
             o = variable_buffer_output (o, " ", 1);
             doneany = 1;
           }
