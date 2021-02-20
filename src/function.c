@@ -1165,7 +1165,6 @@ static char *
 func_sort (char *o, char **argv, const char *funcname UNUSED)
 {
   const char *t;
-  char **words;
   int wordi;
   char *p;
   size_t len;
@@ -1179,21 +1178,22 @@ func_sort (char *o, char **argv, const char *funcname UNUSED)
       ++wordi;
     }
 
-  words = xmalloc ((wordi == 0 ? 1 : wordi) * sizeof (char *));
-
-  /* Now assign pointers to each string in the array.  */
-  t = argv[0];
-  wordi = 0;
-  while ((p = find_next_token (&t, &len)) != 0)
-    {
-      ++t;
-      p[len] = '\0';
-      words[wordi++] = p;
-    }
-
   if (wordi)
     {
+      char **words;
       int i;
+
+      words = xmalloc (wordi * sizeof (char *));
+
+      /* Now assign pointers to each string in the array.  */
+      t = argv[0];
+      wordi = 0;
+      while ((p = find_next_token (&t, &len)) != 0)
+        {
+          ++t;
+          p[len] = '\0';
+          words[wordi++] = p;
+        }
 
       /* Now sort the list of words.  */
       qsort (words, wordi, sizeof (char *), alpha_compare);
@@ -1212,9 +1212,8 @@ func_sort (char *o, char **argv, const char *funcname UNUSED)
 
       /* Kill the last space.  */
       --o;
+      free (words);
     }
-
-  free (words);
 
   return o;
 }
