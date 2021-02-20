@@ -1360,6 +1360,9 @@ main (int argc, char **argv, char **envp)
 #ifdef MAKE_LOAD
                            " load"
 #endif
+#ifdef WINDOWS32
+                           " ansi-colors"
+#endif
 #ifdef MAKE_MAINTAINER_MODE
                            " maintainer"
 #endif
