@@ -1117,23 +1117,26 @@ func_error (char *o, char **argv, const char *funcname)
   char *msg, *p;
   size_t len;
 
-  /* The arguments will be broken on commas.  Rather than create yet
-     another special case where function arguments aren't broken up,
-     just create a format string that puts them back together.  */
-  for (len=0, argvp=argv; *argvp != 0; ++argvp)
-    len += strlen (*argvp) + 2;
-
-  p = msg = alloca (len + 1);
-  msg[0] = '\0';
-
-  for (argvp=argv; argvp[1] != 0; ++argvp)
+  msg = argv[0];
+  if (argv[1] != 0)
     {
+      /* The arguments will be broken on commas.  Rather than create yet
+         another special case where function arguments aren't broken up,
+         just create a format string that puts them back together.  */
+      for (len=0, argvp=argv; *argvp != 0; ++argvp)
+        len += strlen (*argvp) + 2;
+
+      p = msg = alloca (len + 1);
+
+      for (argvp=argv; argvp[1] != 0; ++argvp)
+        {
+          strcpy (p, *argvp);
+          p += strlen (*argvp);
+          *(p++) = ',';
+          *(p++) = ' ';
+        }
       strcpy (p, *argvp);
-      p += strlen (*argvp);
-      *(p++) = ',';
-      *(p++) = ' ';
     }
-  strcpy (p, *argvp);
 
   switch (*funcname)
     {
